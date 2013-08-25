@@ -80,16 +80,16 @@ for my $i (0..$n_queens-1)
     }
 }
 
-my $left_limit = 0;
+my $left_limit = 1;
 my $right_limit = $n_queens;
 
 for my $j (1..$n_queens)
 { 
-    say STDERR "i==>$i j==>$j";
+    say STDERR "i==>1 j==>$j";
     
     my ($dmd, $dsd);
-    my $position = ($i-1)*$n_queens + $j;
-    say STDERR $position;
+    my $position = $j;
+    say STDERR "pos: ", $position;
     say STDERR $left_limit;
     say STDERR $right_limit;
     
@@ -148,11 +148,11 @@ $right_limit = $n_queens*$n_queens;
 
 for my $j (2..$n_queens-1)
 { 
-    say STDERR "i==>$i j==>$j";
+    say STDERR "i==>$n_queens j==>$j";
     
     my ($amd, $asd);
-    my $position = ($i-1)*$n_queens + $j;
-    say STDERR $position;
+    my $position = ($n_queens-1)*$n_queens + $j;
+    say STDERR "pos: ", $position;
     say STDERR $left_limit;
     say STDERR $right_limit;
     
