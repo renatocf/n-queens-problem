@@ -80,7 +80,6 @@ for my $i (0..$n_queens-1)
     }
 }
 
-# for my $i (1..$n_queens) { 
 my $i = 1;
 my $left_limit = ($i-1)*$n_queens+1;
 my $right_limit = $i*$n_queens;
@@ -138,16 +137,11 @@ for my $j (1..$n_queens)
         };
     }
     
-    my (@dmd, @amd, @dsd, @asd, $ans); 
+    my (@dmd, @dsd, $ans); 
     push @dmd, $ans while($ans = $dmd->());
     say STDERR "DMD: ", "@dmd";
-    # push @amd, $ans while($ans = $amd->());
-    # say STDERR "AMD: ", "@amd";
     push @dsd, $ans while($ans = $dsd->());
     say STDERR "DSD: ", "@dsd";
-    # push @asd, $ans while($ans = $asd->());
-    # say STDERR "ASD: ", "@asd";
-    
 }
     
 $i = $n_queens;
@@ -204,13 +198,9 @@ for my $j (2..$n_queens-1)
         };
     }
     
-    my (@dmd, @amd, @dsd, @asd, $ans); 
-    # push @dmd, $ans while($ans = $dmd->());
-    # say STDERR "DMD: ", "@dmd";
+    my (@amd, @asd, $ans); 
     push @amd, $ans while($ans = $amd->());
     say STDERR "AMD: ", "@amd";
-    # push @dsd, $ans while($ans = $dsd->());
-    # say STDERR "DSD: ", "@dsd";
     push @asd, $ans while($ans = $asd->());
     say STDERR "ASD: ", "@asd";
     
