@@ -8,7 +8,8 @@ or die "USAGE: gen_tab.pl n_queens";
 # Discards first line, checking if it is a minisat ans
 chomp(my $title = <>);
 say $title;
-$title =~ /SAT/i or die "Not a minisat answer!";
+$title =~ /^(UN|)SAT$/i or die "Not a minisat answer!";
+exit if($1);
 
 # Prints the top of the table
 print ".---" x $n_queens, ".\n";
