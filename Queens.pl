@@ -84,6 +84,9 @@ for(my $i = 1; $i <= $n_queens; $i++) # (1..$n_queens)
     }
 }
 
+# Third clausules (part 1): diagonals of the 1st line
+# ¬Q_1,j ∨ ¬Q_1+k,j+k ∀ k ∈ ℕ : max{j+k,1+k} ≤ {right_limit, 0, n²}
+# ¬Q_1,j ∨ ¬Q_1+k,j-k ∀ k ∈ ℕ : max{j-k,1-k} ≥ {left_limit, 0, n²}
 my $left_limit = 1;
 my $right_limit = $n_queens;
 
@@ -97,71 +100,37 @@ for my $j (1..$n_queens)
     say STDERR $left_limit;
     say STDERR $right_limit;
     
-    # Descending main diagonal: ↘  (+,+)
+    # Descending main diagonal (dmd): ↘  (+,+)
     $dmd = diagonals(q|↘ |, $position);
-    # {
-    #     my ($di, $dj) = (-1, -1);
-    #     $dmd = sub { 
-    #         # Counters to advance in the lines
-    #         $di++; $dj++; 
-    #         
-    #         # Advance $line lines below (↓ )
-    #         my $line = $di*$n_queens;
-    #         
-    #         # Advance $dj columns right (→ )
-    #         my $pos = $position + $line + $dj; 
-    #         
-    #         # Must be in the boundaries of the line
-    #         unless( ($pos < $left_limit + $line  or $pos < 0)
-    #             or  ($pos > $right_limit + $line or $pos > $n_vars))
-    #         {
-    #             return $pos;
-    #         }
-    #         return 0;
-    #     };
-    # }
     
-    # Descending second diagonal: ↙  (+,-)
+    # Descending second diagonal (dsd): ↙  (+,-)
     $dsd = diagonals(q|↙ |, $position);
-    # {
-    #     my ($di, $dj) = (-1, -1);
-    #     $dsd = sub { 
-    #         # Counters to advance in the lines
-    #         $di++; $dj++;
-    #         # Advance $line lines above (↓ )
-    #         my $line = $di*$n_queens;
-    #         # Advance $dj columns lift (← )
-    #         my $pos = $position + $line - $dj;
-    #         # Must be in the boundaries of the line
-    #         unless( ($pos < $left_limit + $line  or $pos < 0)
-    #             or  ($pos > $right_limit + $line or $pos > $n_vars))
-    #         {
-    #             return $pos;
-    #         }
-    #         return 0;
-    #     };
-    # }
     
     my (@dmd, @dsd, $ans, $first); 
     push @dmd, $ans while($ans = $dmd->());
     say STDERR "DMD: ", "@dmd";
     
-    while($first = shift @dmd) {
-        for my $second (@dmd) {
-            print "-$first -$second 0\n"
-        }
-    }
+    two_by_two(\@dmd);
+    # while($first = shift @dmd) {
+    #     for my $second (@dmd) {
+    #         print "-$first -$second 0\n"
+    #     }
+    # }
     
     push @dsd, $ans while($ans = $dsd->());
     say STDERR "DSD: ", "@dsd";
     
-    while($first = shift @dsd) {
-        for my $second (@dsd) {
-            print "-$first -$second 0\n"
-        }
-    }
+    two_by_two(\@dsd);
+    # while($first = shift @dsd) {
+    #     for my $second (@dsd) {
+    #         print "-$first -$second 0\n"
+    #     }
+    # }
 }
-    
+
+# Third clausules (part 2): diagonals of the last line
+# ¬Q_n,j ∨ ¬Q_n-k,j+k ∀ k ∈ ℕ : max{j+k,1+k} ≤ {right_limit, 0, n²}
+# ¬Q_n,j ∨ ¬Q_n-k,j-k ∀ k ∈ ℕ : max{j-k,1-k} ≥ {left_limit, 0, n²}
 $left_limit = ($n_queens-1)*$n_queens+1;
 $right_limit = $n_queens*$n_queens;
 
@@ -175,66 +144,32 @@ for my $j (2..$n_queens-1)
     say STDERR $left_limit;
     say STDERR $right_limit;
     
-    # Ascending main diagonal: ↖  (-,-)
+    # Ascending main diagonal (amd): ↖  (-,-)
     $amd = diagonals(q|↖ |, $position);
-    # {
-    #     my ($di, $dj) = (-1, -1);
-    #     $amd = sub { 
-    #         # Counters to advance in the lines
-    #         $di++; $dj++;
-    #         # Advance $line lines below (↑ )
-    #         my $line = $di*$n_queens;
-    #         # Advance $dj columns lift (← )
-    #         my $pos = $position - $line - $dj;
-    #         # Must be in the boundaries of the line
-    #         unless( ($pos < $left_limit - $line  or $pos < 0)
-    #             or  ($pos > $right_limit - $line or $pos > $n_vars))
-    #         {
-    #             return $pos;
-    #         }
-    #         return 0;
-    #     };
-    # }
     
-    # Ascending second diagonal: ↗  (-,+)
+    # Ascending second diagonal (asd): ↗  (-,+)
     $asd = diagonals(q|↗ |, $position);
-    # {
-    #     my ($di, $dj) = (-1, -1);
-    #     $asd = sub { 
-    #         # Counters to advance in the lines
-    #         $di++; $dj++;
-    #         # Advance $line lines below (↑ )
-    #         my $line = $di*$n_queens;
-    #         # Advance $dj columns right (→ )
-    #         my $pos = $position - $line + $dj;
-    #         # Must be in the boundaries of the line
-    #         unless( ($pos < $left_limit - $line  or $pos < 0)
-    #             or  ($pos > $right_limit - $line or $pos > $n_vars))
-    #         {
-    #             return $pos;
-    #         }
-    #         return 0;
-    #     };
-    # }
     
     my (@amd, @asd, $ans, $first);
     push @amd, $ans while($ans = $amd->());
     say STDERR "AMD: ", "@amd";
     
-    while($first = shift @amd) {
-        for my $second (@amd) {
-            print "-$first -$second 0\n"
-        }
-    }
+    two_by_two(\@amd);
+    # while($first = shift @amd) {
+    #     for my $second (@amd) {
+    #         print "-$first -$second 0\n"
+    #     }
+    # }
     
     push @asd, $ans while($ans = $asd->());
     say STDERR "ASD: ", "@asd";
     
-    while($first = shift @asd) {
-        for my $second (@asd) {
-            print "-$first -$second 0\n"
-        }
-    }
+    two_by_two(\@asd);
+    # while($first = shift @asd) {
+    #     for my $second (@asd) {
+    #         print "-$first -$second 0\n"
+    #     }
+    # }
 }
 
 #######################################################################
@@ -302,5 +237,19 @@ sub diagonals
             or $pos > $right_limit + (-1)**$sig_up * $line 
         );
         return 0;
+    }
+}
+
+# Subroutine:  two_by_two
+# Arguments:   reference to list
+# Description: Given the reference to a list, prints the elements 
+#              $a and $b in the format "-$a -$b 0".
+sub two_by_two 
+{
+    my $ref = shift;
+    while(my $first = shift @{$ref}) {
+        for my $second (@{$ref}) {
+            print "-$first -$second 0\n";
+        }
     }
 }
