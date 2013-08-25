@@ -109,23 +109,11 @@ for my $j (1..$n_queens)
     my (@dmd, @dsd, $ans, $first); 
     push @dmd, $ans while($ans = $dmd->());
     say STDERR "DMD: ", "@dmd";
-    
     two_by_two(\@dmd);
-    # while($first = shift @dmd) {
-    #     for my $second (@dmd) {
-    #         print "-$first -$second 0\n"
-    #     }
-    # }
     
     push @dsd, $ans while($ans = $dsd->());
     say STDERR "DSD: ", "@dsd";
-    
     two_by_two(\@dsd);
-    # while($first = shift @dsd) {
-    #     for my $second (@dsd) {
-    #         print "-$first -$second 0\n"
-    #     }
-    # }
 }
 
 # Third clausules (part 2): diagonals of the last line
@@ -153,23 +141,11 @@ for my $j (2..$n_queens-1)
     my (@amd, @asd, $ans, $first);
     push @amd, $ans while($ans = $amd->());
     say STDERR "AMD: ", "@amd";
-    
     two_by_two(\@amd);
-    # while($first = shift @amd) {
-    #     for my $second (@amd) {
-    #         print "-$first -$second 0\n"
-    #     }
-    # }
     
     push @asd, $ans while($ans = $asd->());
     say STDERR "ASD: ", "@asd";
-    
     two_by_two(\@asd);
-    # while($first = shift @asd) {
-    #     for my $second (@asd) {
-    #         print "-$first -$second 0\n"
-    #     }
-    # }
 }
 
 #######################################################################
