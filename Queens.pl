@@ -92,13 +92,8 @@ my $right_limit = $n_queens;
 
 for my $j (1..$n_queens)
 { 
-    say STDERR "i==>1 j==>$j";
-    
-    my ($dmd, $dsd);
+    my ($dmd, $dsd, @dmd, @dsd, $ans); 
     my $position = $j;
-    say STDERR "pos: ", $position;
-    say STDERR $left_limit;
-    say STDERR $right_limit;
     
     # Descending main diagonal (dmd): ↘  (+,+)
     $dmd = diagonals(q|↘ |, $position);
@@ -106,13 +101,10 @@ for my $j (1..$n_queens)
     # Descending second diagonal (dsd): ↙  (+,-)
     $dsd = diagonals(q|↙ |, $position);
     
-    my (@dmd, @dsd, $ans, $first); 
     push @dmd, $ans while($ans = $dmd->());
-    say STDERR "DMD: ", "@dmd";
     two_by_two(\@dmd);
     
     push @dsd, $ans while($ans = $dsd->());
-    say STDERR "DSD: ", "@dsd";
     two_by_two(\@dsd);
 }
 
@@ -124,13 +116,8 @@ $right_limit = $n_queens*$n_queens;
 
 for my $j (2..$n_queens-1)
 { 
-    say STDERR "i==>$n_queens j==>$j";
-    
-    my ($amd, $asd);
+    my ($amd, $asd, @amd, @asd, $ans);
     my $position = ($n_queens-1)*$n_queens + $j;
-    say STDERR "pos: ", $position;
-    say STDERR $left_limit;
-    say STDERR $right_limit;
     
     # Ascending main diagonal (amd): ↖  (-,-)
     $amd = diagonals(q|↖ |, $position);
@@ -138,13 +125,10 @@ for my $j (2..$n_queens-1)
     # Ascending second diagonal (asd): ↗  (-,+)
     $asd = diagonals(q|↗ |, $position);
     
-    my (@amd, @asd, $ans, $first);
     push @amd, $ans while($ans = $amd->());
-    say STDERR "AMD: ", "@amd";
     two_by_two(\@amd);
     
     push @asd, $ans while($ans = $asd->());
-    say STDERR "ASD: ", "@asd";
     two_by_two(\@asd);
 }
 
