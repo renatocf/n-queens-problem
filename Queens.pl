@@ -1,47 +1,58 @@
 #!/usr/bin/perl 
 package main;
-use v5.14;
+use v5.14; 
 
-# Problem of N queens: given N queens 
-# and a NxN chess board, is it possible 
-# to put all the queens in such a way 
-# they do not attack each other?
+#######################################################################
+##                          DOCUMTATION                              ##
+#######################################################################
+
+# PROBLEM OF N QUEENS: 
+# --------------------
+# 
+# Given N queens and a NxN chess board, is it possible to put all the
+# queens in such a way they do not attack each other?
 # 
 # Example: 4x4 chess table with 4 queens
 # Result:  SATISFABLE
-#
-#       01     02     03     04
-#    .------.------.------.------.
-#    |      | ++++ |      |      |
-# 01 |  13  |  Q1  | 3142 |  12  |
-#    |      | ++++ |      |      |
-#    |------|------|------|------|
-#    |      |      |      | ++++ |
-# 02 | 1234 | 321  | 124  |  Q2  |
-#    |      |      |      | ++++ |
-#    |------|------|------|------|
-#    | ++++ |      |      |      |
-# 03 |  Q3  |  314 |  342 | 1324 |
-#    | ++++ |      |      |      |
-#    |------|------|------|------|
-#    |      |      | ++++ |      |
-# 04 |  43  | 3412 |  Q4  |  42  |
-#    |      |      | ++++ |      |
-#    '------'------'------'------'
+# 
+#                       01     02     03     04
+#                    .------.------.------.------.
+#                    |      | ++++ |      |      |
+#                 01 |  13  |  Q1  | 3142 |  12  |
+#                    |      | ++++ |      |      |
+#                    |------|------|------|------|
+#                    |      |      |      | ++++ |
+#                 02 | 1234 | 321  | 124  |  Q2  |
+#                    |      |      |      | ++++ |
+#                    |------|------|------|------|
+#                    | ++++ |      |      |      |
+#                 03 |  Q3  |  314 |  342 | 1324 |
+#                    | ++++ |      |      |      |
+#                    |------|------|------|------|
+#                    |      |      | ++++ |      |
+#                 04 |  43  | 3412 |  Q4  |  42  |
+#                    |      |      | ++++ |      |
+#                    '------'------'------'------'
+# 
+
+#######################################################################
+##                    PACKAGE/GLOBAL VARIABLES                       ##
+#######################################################################
 
 # Pragmas
-use strict;
+use strict; 
 use warnings;
 
-# Package/Global vars
+# Number of queens
 our $n_queens = shift @ARGV 
 or die "USAGE: perl Queens.pl n_queens\n";
 
+# Number of variables and clausules
 our $n_vars = $n_queens*$n_queens;
-our $n_lines = n_lines($n_queens);
+our $n_clausules = n_lines($n_queens);
 
 #######################################################################
-##                            PREAMBLE                               ##
+##                             HEADER                                ##
 #######################################################################
 
 # Comments section
@@ -54,7 +65,7 @@ COMMENTS
 
 # Header/Preamble section
 print << "HEADER";
-p cnf $n_vars $n_lines
+p cnf $n_vars $n_clausules
 HEADER
 
 #######################################################################
@@ -97,15 +108,13 @@ for my $j (1..$n_queens)
     
     # Descending main diagonal (dmd): ↘  (+,+)
     $dmd = diagonals(q|↘ |, $position);
+    push @dmd, $ans while($ans = $dmd->());
+    two_by_two(@dmd);
     
     # Descending second diagonal (dsd): ↙  (+,-)
     $dsd = diagonals(q|↙ |, $position);
-    
-    push @dmd, $ans while($ans = $dmd->());
-    two_by_two(\@dmd);
-    
     push @dsd, $ans while($ans = $dsd->());
-    two_by_two(\@dsd);
+    two_by_two(@dsd);
 }
 
 # Third clausules (part 2): diagonals of the last line
@@ -121,15 +130,13 @@ for my $j (2..$n_queens-1)
     
     # Ascending main diagonal (amd): ↖  (-,-)
     $amd = diagonals(q|↖ |, $position);
+    push @amd, $ans while($ans = $amd->());
+    two_by_two(@amd);
     
     # Ascending second diagonal (asd): ↗  (-,+)
     $asd = diagonals(q|↗ |, $position);
-    
-    push @amd, $ans while($ans = $amd->());
-    two_by_two(\@amd);
-    
     push @asd, $ans while($ans = $asd->());
-    two_by_two(\@asd);
+    two_by_two(@asd);
 }
 
 #######################################################################
@@ -142,7 +149,7 @@ for my $j (2..$n_queens-1)
 #              calculates how may clausules will be used to
 #              create an entry in the cnf format.
 sub n_lines {
-    my $n_queens = shift;
+    my $n_queens = shift;    # Number of queens
     my $n_lines = $n_queens; # 1 Queens per line
         
     # Just 1 queen per column
@@ -201,14 +208,13 @@ sub diagonals
 }
 
 # Subroutine:  two_by_two
-# Arguments:   reference to list
-# Description: Given the reference to a list, prints the elements 
-#              $a and $b in the format "-$a -$b 0".
+# Arguments:   list of numbers
+# Description: Given a a list, prints the elements $a and $b 
+#              in the format "-$a -$b 0".
 sub two_by_two 
 {
-    my $ref = shift;
-    while(my $first = shift @{$ref}) {
-        for my $second (@{$ref}) {
+    while(my $first = shift @_) {
+        for my $second (@_) {
             print "-$first -$second 0\n";
         }
     }
