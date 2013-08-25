@@ -35,14 +35,9 @@ use warnings;
 
 # Package/Global vars
 our $n_queens = shift @ARGV 
-or die "Number of queens required!";
+or die "USAGE: perl Queens.pl n_queens\n";
 our $n_vars = $n_queens*$n_queens;
-our $n_lines = $n_queens                     ## 1 Queen per line
-             + $n_queens *                   ## In each line
-               ($n_queens*($n_queens-1))/2;  #  Just 1 Queen per column
-
-# open(OUT, ">", "${n_queens}_queens.cnf")
-# or die "Cannot create ${n_queens}_queens.cnf";
+our $n_lines = n_lines($n_queens);
 
 # select OUT;
 print << "COMMENTS";
@@ -68,13 +63,12 @@ for my $i (0..$n_queens-1)
 
 # Second clausules: just 1 queen per column
 # ¬Q_i,j ∨ ¬Q_i,k, ∀ i,j ∈ [1,n]
-for my $i (0..$n_queens-1) 
+for(my $i = 1; $i <= $n_queens; $i++) # (1..$n_queens)
 {
-    for my $j (1..$n_queens) { 
-        for my $k ($j+1..$n_queens) { 
-            # 1 queen only, 2 by 2
-            my $first = $i * $n_queens + $j;
-            my $second = $i * $n_queens + $k;
+    for(my $j =1; $j <= $n_queens; $j++) { # (1..$n_queens)
+        my $first = ($j-1)*$n_queens + $i;
+        for(my $k = $j+1; $k <= $n_queens; $k++) { #($j+1..$n_queens)
+            my $second = ($k-1) * $n_queens + $i;
             print "-$first -$second 0\n" if($first != $second);
         }
     }
@@ -227,29 +221,27 @@ for my $j (2..$n_queens-1)
             print "-$first -$second 0\n"
         }
     }
-    
-    # for my $k (0..$n_queens) 
-    # {
-    #     say STDERR "\tk==>$k";$n = 0;
-    #     for my $func (@diagonals) {
-    #         say STDERR "\tdentro ", ref $func;
-    #         $pos = $func->($i, $j); $n++;
-    #         # ($pos) ? (push @{"$func"}, $pos) : 
-    #                  # (splice @diagonals, $n, 1);
-    #     }
-    # }
-    
-    # say STDERR "Chegou aqui?";
-    # for my $array (qw/dmd amd dsd asd/)
-    # {
-    #     say STDERR "$array ", scalar ${"$array"};
-    #     for my $m (1..$#{"$array"}) {
-    #         for my $n ($m..$#{"$array"}) {
-    #             print "-$array->{$m} -$array->{$n} 0\n";
-    #         }
-    #     }
-    # }
 }
-# $i+$k + ($j-1)*$n_queens+$k
 
-# close OUT;
+# Subroutine:  n_lines
+# Arguments:   number of queens
+# Description: Given the number of queens, deterministically 
+#              calculates how may clausules will be used to
+#              create an entry in the cnf format
+sub n_lines {
+    my $n_queens = shift;
+    my $n_lines = $n_queens; # 1 Queens per line
+        
+    # Just 1 queen per column
+    $n_lines += $n_queens * ($n_queens*($n_queens-1)/2);
+    
+    # Sub diagonals (but the matrix'ones)
+    for(my $i = 2; $i < $n_queens; $i++) {
+        $n_lines += 4*$i*($i-1)/2;
+    }
+    
+    # Main and secondary table diagonals
+    $n_lines += 2 * ($n_queens*($n_queens-1)/2);
+    
+    return $n_lines;
+}
