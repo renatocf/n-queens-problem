@@ -36,10 +36,15 @@ use warnings;
 # Package/Global vars
 our $n_queens = shift @ARGV 
 or die "USAGE: perl Queens.pl n_queens\n";
+
 our $n_vars = $n_queens*$n_queens;
 our $n_lines = n_lines($n_queens);
 
-# select OUT;
+#######################################################################
+##                            PREAMBLE                               ##
+#######################################################################
+
+# Comments section
 print << "COMMENTS";
 c Nome      Renato Cordeiro Ferreira
 c MAC0239   Metodos Formais de Programacao
@@ -47,9 +52,14 @@ c Professor Marcelo Finger
 c Problema  n Rainhas
 COMMENTS
 
+# Header/Preamble section
 print << "HEADER";
 p cnf $n_vars $n_lines
 HEADER
+
+#######################################################################
+##                            CLAUSULES                              ##
+#######################################################################
 
 # First clausules: just 1 queen per line
 # ∧ (i=1,n) [ ∨ (j=1,n) Q_i,j ]
@@ -88,47 +98,49 @@ for my $j (1..$n_queens)
     say STDERR $right_limit;
     
     # Descending main diagonal: ↘  (+,+)
-    {
-        my ($di, $dj) = (-1, -1);
-        $dmd = sub { 
-            # Counters to advance in the lines
-            $di++; $dj++; 
-            
-            # Advance $line lines below (↓ )
-            my $line = $di*$n_queens;
-            
-            # Advance $dj columns right (→ )
-            my $pos = $position + $line + $dj; 
-            
-            # Must be in the boundaries of the line
-            unless( ($pos < $left_limit + $line  or $pos < 0)
-                or  ($pos > $right_limit + $line or $pos > $n_vars))
-            {
-                return $pos;
-            }
-            return 0;
-        };
-    }
+    $dmd = diagonals(q|↘ |, $position);
+    # {
+    #     my ($di, $dj) = (-1, -1);
+    #     $dmd = sub { 
+    #         # Counters to advance in the lines
+    #         $di++; $dj++; 
+    #         
+    #         # Advance $line lines below (↓ )
+    #         my $line = $di*$n_queens;
+    #         
+    #         # Advance $dj columns right (→ )
+    #         my $pos = $position + $line + $dj; 
+    #         
+    #         # Must be in the boundaries of the line
+    #         unless( ($pos < $left_limit + $line  or $pos < 0)
+    #             or  ($pos > $right_limit + $line or $pos > $n_vars))
+    #         {
+    #             return $pos;
+    #         }
+    #         return 0;
+    #     };
+    # }
     
     # Descending second diagonal: ↙  (+,-)
-    {
-        my ($di, $dj) = (-1, -1);
-        $dsd = sub { 
-            # Counters to advance in the lines
-            $di++; $dj++;
-            # Advance $line lines above (↓ )
-            my $line = $di*$n_queens;
-            # Advance $dj columns lift (← )
-            my $pos = $position + $line - $dj;
-            # Must be in the boundaries of the line
-            unless( ($pos < $left_limit + $line  or $pos < 0)
-                or  ($pos > $right_limit + $line or $pos > $n_vars))
-            {
-                return $pos;
-            }
-            return 0;
-        };
-    }
+    $dsd = diagonals(q|↙ |, $position);
+    # {
+    #     my ($di, $dj) = (-1, -1);
+    #     $dsd = sub { 
+    #         # Counters to advance in the lines
+    #         $di++; $dj++;
+    #         # Advance $line lines above (↓ )
+    #         my $line = $di*$n_queens;
+    #         # Advance $dj columns lift (← )
+    #         my $pos = $position + $line - $dj;
+    #         # Must be in the boundaries of the line
+    #         unless( ($pos < $left_limit + $line  or $pos < 0)
+    #             or  ($pos > $right_limit + $line or $pos > $n_vars))
+    #         {
+    #             return $pos;
+    #         }
+    #         return 0;
+    #     };
+    # }
     
     my (@dmd, @dsd, $ans, $first); 
     push @dmd, $ans while($ans = $dmd->());
@@ -164,44 +176,46 @@ for my $j (2..$n_queens-1)
     say STDERR $right_limit;
     
     # Ascending main diagonal: ↖  (-,-)
-    {
-        my ($di, $dj) = (-1, -1);
-        $amd = sub { 
-            # Counters to advance in the lines
-            $di++; $dj++;
-            # Advance $line lines below (↑ )
-            my $line = $di*$n_queens;
-            # Advance $dj columns lift (← )
-            my $pos = $position - $line - $dj;
-            # Must be in the boundaries of the line
-            unless( ($pos < $left_limit - $line  or $pos < 0)
-                or  ($pos > $right_limit - $line or $pos > $n_vars))
-            {
-                return $pos;
-            }
-            return 0;
-        };
-    }
+    $amd = diagonals(q|↖ |, $position);
+    # {
+    #     my ($di, $dj) = (-1, -1);
+    #     $amd = sub { 
+    #         # Counters to advance in the lines
+    #         $di++; $dj++;
+    #         # Advance $line lines below (↑ )
+    #         my $line = $di*$n_queens;
+    #         # Advance $dj columns lift (← )
+    #         my $pos = $position - $line - $dj;
+    #         # Must be in the boundaries of the line
+    #         unless( ($pos < $left_limit - $line  or $pos < 0)
+    #             or  ($pos > $right_limit - $line or $pos > $n_vars))
+    #         {
+    #             return $pos;
+    #         }
+    #         return 0;
+    #     };
+    # }
     
     # Ascending second diagonal: ↗  (-,+)
-    {
-        my ($di, $dj) = (-1, -1);
-        $asd = sub { 
-            # Counters to advance in the lines
-            $di++; $dj++;
-            # Advance $line lines below (↑ )
-            my $line = $di*$n_queens;
-            # Advance $dj columns right (→ )
-            my $pos = $position - $line + $dj;
-            # Must be in the boundaries of the line
-            unless( ($pos < $left_limit - $line  or $pos < 0)
-                or  ($pos > $right_limit - $line or $pos > $n_vars))
-            {
-                return $pos;
-            }
-            return 0;
-        };
-    }
+    $asd = diagonals(q|↗ |, $position);
+    # {
+    #     my ($di, $dj) = (-1, -1);
+    #     $asd = sub { 
+    #         # Counters to advance in the lines
+    #         $di++; $dj++;
+    #         # Advance $line lines below (↑ )
+    #         my $line = $di*$n_queens;
+    #         # Advance $dj columns right (→ )
+    #         my $pos = $position - $line + $dj;
+    #         # Must be in the boundaries of the line
+    #         unless( ($pos < $left_limit - $line  or $pos < 0)
+    #             or  ($pos > $right_limit - $line or $pos > $n_vars))
+    #         {
+    #             return $pos;
+    #         }
+    #         return 0;
+    #     };
+    # }
     
     my (@amd, @asd, $ans, $first);
     push @amd, $ans while($ans = $amd->());
@@ -223,11 +237,15 @@ for my $j (2..$n_queens-1)
     }
 }
 
+#######################################################################
+##                          SUBROUTINES                              ##
+#######################################################################
+
 # Subroutine:  n_lines
 # Arguments:   number of queens
 # Description: Given the number of queens, deterministically 
 #              calculates how may clausules will be used to
-#              create an entry in the cnf format
+#              create an entry in the cnf format.
 sub n_lines {
     my $n_queens = shift;
     my $n_lines = $n_queens; # 1 Queens per line
@@ -244,4 +262,45 @@ sub n_lines {
     $n_lines += 2 * ($n_queens*($n_queens-1)/2);
     
     return $n_lines;
+}
+
+# Subroutine:  diagonals
+# Arguments:   direction (↘ ,↙ ,↖ ,↗ ), position
+# Description: Given the direction and position, creates a subroutine 
+#              that lists all the positions in the diagonal for that
+#              direction.
+sub diagonals 
+{ 
+    ## VARIABLES ######################################################
+    my $dir = shift;                   # Simbolic direcion
+    my $position = shift;              # Our position in the board
+    my ($di, $dj) = (-1, -1);          # Counters to advance lines
+    my ($sig_up, $sig_right) = (0, 0); # Defining the direction
+    
+    given($dir) {
+        when(q|↘ |) { $sig_up = 0; $sig_right = 0 } # (+,+)
+        when(q|↙ |) { $sig_up = 0; $sig_right = 1 } # (+,-)
+        when(q|↖ |) { $sig_up = 1; $sig_right = 1 } # (-,-)
+        when(q|↗ |) { $sig_up = 1; $sig_right = 0 } # (-,+)
+        default     { die "Signal unknown!\n" };
+    }
+    
+    ## GENERATE SUBROUTINE ############################################
+    return sub {
+        # Counters to advance in the lines
+        $di++; $dj++; 
+        my ($line, $pos) = ($di*$n_queens, 0);
+        
+        $pos = $position               # From the position, go:
+             + (-1)**$sig_up * $line   # $line above (↑ ) or below (↓ )
+             + (-1)**$sig_right * $dj; # $dj   right (→ ) or left  (← )
+        
+        # But only while we are in the boundaries of the line
+        return $pos unless( 
+            $pos < 0 or $pos > $n_vars
+            or $pos < $left_limit + (-1)**$sig_up * $line 
+            or $pos > $right_limit + (-1)**$sig_up * $line 
+        );
+        return 0;
+    }
 }
