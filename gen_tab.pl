@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+package main;
 use v5.14;
 
 # Receives as input the number of queens
