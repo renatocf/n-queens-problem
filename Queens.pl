@@ -76,12 +76,12 @@ for my $j (1..$n_queens)
     # Descending main diagonal (dmd): ↘  (+,+)
     $dmd = diagonals(q|↘ |, $position);
     push @dmd, $ans while($ans = $dmd->());
-    two_by_two(@dmd);
+    two_by_two(\@dmd);
     
     # Descending second diagonal (dsd): ↙  (+,-)
     $dsd = diagonals(q|↙ |, $position);
     push @dsd, $ans while($ans = $dsd->());
-    two_by_two(@dsd);
+    two_by_two(\@dsd);
 }
 
 # Third clausules (part 2): diagonals of the last line
@@ -98,12 +98,12 @@ for my $j (2..$n_queens-1)
     # Ascending main diagonal (amd): ↖  (-,-)
     $amd = diagonals(q|↖ |, $position);
     push @amd, $ans while($ans = $amd->());
-    two_by_two(@amd);
+    two_by_two(\@amd);
     
     # Ascending second diagonal (asd): ↗  (-,+)
     $asd = diagonals(q|↗ |, $position);
     push @asd, $ans while($ans = $asd->());
-    two_by_two(@asd);
+    two_by_two(\@asd);
 }
 
 #######################################################################
@@ -180,9 +180,10 @@ sub diagonals
 #              in the format "-$a -$b 0".
 sub two_by_two 
 {
-    while(my $first = shift @_) {
-        for my $second (@_) {
-            print "-$first -$second 0\n";
+    my $pos = shift; my $size = scalar @{$pos};
+    for(my $i = 0; $i < $size; $i++) {
+        for(my $j = $i+1; $j < $size; $j++) {
+            print "-$pos->[$i] -$pos->[$j] 0\n";
         }
     }
 }

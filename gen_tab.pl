@@ -8,7 +8,7 @@ or die "USAGE: gen_tab.pl n_queens";
 
 # Discards first line, checking if it is a minisat ans
 chomp(my $title = <>);
-say $title;
+say "The problem is $title.";
 $title =~ /^(UN|)SAT$/i or die "Not a minisat answer!";
 exit if($1);
 

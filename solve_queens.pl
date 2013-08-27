@@ -2,8 +2,9 @@
 package main;
 use v5.14;
 
-say "How many queens do you want to run the pipeline with?";
-chomp(my $n = <STDIN>); my $num = $n;
+my $n = shift @ARGV 
+or die "Usage: solve_queels.pl n_queens\n";
+my $num = $n;
 
 if($n <= 0)    { die "Must be a positive number of queens!"; }
 elsif($n < 10) { $n = "0".$n; }
