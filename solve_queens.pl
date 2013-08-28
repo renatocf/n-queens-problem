@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 # Usage/variables
-my $n = shift @ARGV 
+scalar @ARGV == 1 and my $n = shift @ARGV 
 or die "Usage: solve_queels.pl n_queens\n";
 
 $n =~ /^(\d+)$/

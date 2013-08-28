@@ -11,7 +11,7 @@ use strict;
 use warnings;
 
 # Number of queens
-my $n_queens = shift @ARGV 
+scalar @ARGV == 1 and my $n_queens = shift @ARGV 
 or die "USAGE: perl Queens.pl n_queens\n";
 
 $n_queens =~ /^(\d+)$/

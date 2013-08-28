@@ -3,7 +3,7 @@ package main;
 use v5.14;
 
 # Receives as input the number of queens
-my $n_queens = shift @ARGV
+scalar @ARGV == 1 and my $n_queens = shift @ARGV 
 or die "USAGE: gen_tab.pl n_queens";
 
 $n_queens =~ /^(\d+)$/
