@@ -1,3 +1,11 @@
+# Ignore everything
+*
+
+# In particular, .cnf, .ans 
+# and .minisat files
 *.cnf
 *.ans
 *.minisat
+
+# But not the perl scripts!
+!*.pl
