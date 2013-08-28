@@ -1,4 +1,4 @@
-#!/usr/bin/perl 
+#!/usr/bin/perl -wT
 package main;
 use v5.14; 
 
@@ -11,12 +11,18 @@ use strict;
 use warnings;
 
 # Number of queens
-our $n_queens = shift @ARGV 
+my $n_queens = shift @ARGV 
 or die "USAGE: perl Queens.pl n_queens\n";
 
+$n_queens =~ /^(\d+)$/
+or die "The number of queens must be made only of integers";
+
+($n_queens = $1) > 0
+or die "The number of queens must be strictly positive";
+
 # Number of variables and clausules
-our $n_vars = $n_queens*$n_queens;
-our $n_clausules = n_lines($n_queens);
+my $n_vars = $n_queens*$n_queens;
+my $n_clausules = n_lines($n_queens);
 
 #######################################################################
 ##                             HEADER                                ##

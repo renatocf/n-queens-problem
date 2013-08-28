@@ -1,10 +1,16 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -wT
 package main;
 use v5.14;
 
 # Receives as input the number of queens
 my $n_queens = shift @ARGV
 or die "USAGE: gen_tab.pl n_queens";
+
+$n_queens =~ /^(\d+)$/
+or die "The number of queens must be made only of integers";
+
+($n_queens = $1) > 0
+or die "The number of queens must be strictly positive";
 
 # Discards first line, checking if it is a minisat ans
 chomp(my $title = <>);
