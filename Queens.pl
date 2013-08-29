@@ -54,7 +54,7 @@ HEADER
 #######################################################################
 
 # First clausules: just 1 queen per line
-# ∧ (i=1,n) [ ∨ (j=1,n) Q_i,j ]
+# ⋀ (i=1,n) [ ⋁ (j=1,n) Q_i,j ]
 for my $i (0..$n_queens-1) 
 {
     for my $j (1..$n_queens) { 
