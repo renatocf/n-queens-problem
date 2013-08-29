@@ -37,10 +37,10 @@ print $CNF qx/perl -wT Queens.pl ${num}/;
 close $CNF;
 
 # Call minisat with 'n' and stores the output in n_queens.minisat
-open(my $SAT, ">", "${n}_queens.minisat"); 
+open(my $SAT, ">", "${n}_queens.minisat")
     or die "Cannot open ${n}_queens.minisat";
 
-flock $CNF, LOCK_EX 
+flock $SAT, LOCK_EX 
     or die "Could not lock ${n}_queens.minisat";
 
 print $SAT qx|minisat ${n}_queens.cnf ${n}_queens.ans 2>/dev/null|;
