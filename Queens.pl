@@ -10,6 +10,14 @@ use v5.14;
 use strict; 
 use warnings;
 
+# Options
+use Getopt::Long;
+my $help = undef;
+GetOptions("help" => \$help);
+
+# Help message
+if($help) { print while <DATA>; exit; }
+
 # Number of queens
 scalar @ARGV == 1 and my $n_queens = shift @ARGV 
 or die "USAGE: perl Queens.pl n_queens\n";
@@ -194,11 +202,10 @@ sub two_by_two
     }
 }
 
-__END__
-
 #######################################################################
 ##                          DOCUMENTATION                            ##
 #######################################################################
+__END__
 
 PROBLEM OF N QUEENS: 
 --------------------
