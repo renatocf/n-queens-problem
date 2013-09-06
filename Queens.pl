@@ -23,7 +23,7 @@ scalar @ARGV == 1 and my $n_queens = shift @ARGV
 or die "USAGE: perl Queens.pl n_queens\n";
 
 $n_queens =~ /^(\d+)$/
-or die "The number of queens must be made only of integers";
+or die "The number of queens must be made only by integers";
 
 ($n_queens = $1) > 0
 or die "The number of queens must be strictly positive";

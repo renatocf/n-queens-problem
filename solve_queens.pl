@@ -20,7 +20,7 @@ scalar @ARGV == 1 and my $n = shift @ARGV
 or die "Usage: solve_queels.pl n_queens\n";
 
 $n =~ /^(\d+)$/
-or die "The number of queens must be made only of integers";
+or die "The number of queens must be made only by integers";
 
 my $num = $n = $1;
 unless($n > 0) { die "Must be a positive number of queens!"; }
